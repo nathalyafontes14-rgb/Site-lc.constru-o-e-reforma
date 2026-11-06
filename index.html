@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LC Construção e Reforma | Ourinhos e região</title>
+<meta name="description" content="Construção e reforma em Ourinhos e região: casas, muros, calçadas, telhados, banheiros e mais. Peça seu orçamento pelo WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topo">
+  <a class="marca" href="#inicio">LC <span>Construção e Reforma</span></a>
+  <nav aria-label="Principal">
+    <a href="#sobre">Quem somos</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#obras">Obras</a>
+    <a href="#contato">Contato</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="inicio">
+    <div class="hero-texto">
+      <h1>Sua obra feita por quem vive de obra.</h1>
+      <p>Construção e reforma em Ourinhos e região, com o pedreiro Lucas de Oliveira e equipe no comando de cada etapa.</p>
+      <div class="botoes">
+        <button class="btn btn-principal" data-abrir-chat>Falar com o atendimento</button>
+        <a class="btn btn-contorno" href="https://wa.me/5514998454184" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+      </div>
+    </div>
+    <div class="fita" aria-hidden="true"></div>
+  </section>
+
+  <section class="secao" id="sobre">
+    <h2>Quem somos</h2>
+    <div class="duas-colunas">
+      <p>A LC Construção e Reforma é uma MEI que atende Ourinhos e região com serviços de construção e reforma, do muro simples à casa completa.</p>
+      <p>Lucas de Oliveira trabalha como pedreiro desde a adolescência. Em 2021 ele formalizou o negócio. A equipe cresce ou diminui de acordo com o tamanho de cada obra.</p>
+    </div>
+    <dl class="fatos">
+      <div><dt>Desde</dt><dd>2021 como MEI</dd></div>
+      <div><dt>Experiência</dt><dd>No ramo desde a adolescência</dd></div>
+      <div><dt>Onde atendemos</dt><dd>Ourinhos e região</dd></div>
+    </dl>
+  </section>
+
+  <section class="secao escura" id="servicos">
+    <h2>O que a gente faz</h2>
+    <ul class="servicos">
+      <li>Construção completa de casas</li>
+      <li>Reformas em qualquer parte da casa</li>
+      <li>Reforma de banheiros</li>
+      <li>Muros</li>
+      <li>Calçadas</li>
+      <li>Telhados</li>
+      <li>Instalação de portas e janelas</li>
+      <li>Instalação de tetos</li>
+      <li>Encanamento</li>
+      <li>E outros serviços de obra. Pergunte!</li>
+    </ul>
+  </section>
+
+  <section class="secao" id="obras">
+    <h2>Obras realizadas</h2>
+    <p class="intro">Fotos de trabalhos entregues. Para trocar, coloque suas imagens na pasta <code>img/</code> e ajuste os nomes em <code>index.html</code>.</p>
+    <div class="galeria">
+      <figure class="foto"><img src="img/obra-1.jpg" alt="" onerror="this.remove()"><figcaption>Foto da obra 1</figcaption></figure>
+      <figure class="foto"><img src="img/obra-2.jpg" alt="" onerror="this.remove()"><figcaption>Foto da obra 2</figcaption></figure>
+      <figure class="foto"><img src="img/obra-3.jpg" alt="" onerror="this.remove()"><figcaption>Foto da obra 3</figcaption></figure>
+      <figure class="foto"><img src="img/obra-4.jpg" alt="" onerror="this.remove()"><figcaption>Foto da obra 4</figcaption></figure>
+      <figure class="foto"><img src="img/obra-5.jpg" alt="" onerror="this.remove()"><figcaption>Foto da obra 5</figcaption></figure>
+      <figure class="foto"><img src="img/obra-6.jpg" alt="" onerror="this.remove()"><figcaption>Foto da obra 6</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="secao contato" id="contato">
+    <h2>Peça seu orçamento</h2>
+    <p>Conte o que você precisa. Respondemos o mais rápido possível.</p>
+    <ul class="canais">
+      <li><strong>WhatsApp</strong> <a href="https://wa.me/5514998454184" target="_blank" rel="noopener">(14) 99845-4184</a></li>
+      <li><strong>E-mail</strong> <a href="mailto:lc.construcaoereforma@gmail.com">lc.construcaoereforma@gmail.com</a></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="rodape">
+  <p>LC Construção e Reforma · MEI · Ourinhos e região</p>
+</footer>
+
+<!-- Chatbot -->
+<button class="chat-fab" data-abrir-chat aria-label="Abrir atendimento">Atendimento rápido</button>
+<section class="chat" id="chat" aria-label="Atendimento" hidden>
+  <header class="chat-topo">
+    <strong>Atendimento LC</strong>
+    <button id="chat-fechar" aria-label="Fechar atendimento">Fechar</button>
+  </header>
+  <div class="chat-msgs" id="chat-msgs" aria-live="polite"></div>
+  <div class="chat-opcoes" id="chat-opcoes"></div>
+  <form class="chat-form" id="chat-form">
+    <input id="chat-input" type="text" autocomplete="off" placeholder="Digite sua mensagem" aria-label="Mensagem">
+    <button type="submit">Enviar</button>
+  </form>
+</section>
+
+<script src="js/chatbot.js"></script>
+</body>
+</html>
