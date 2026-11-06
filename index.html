@@ -91,4 +91,283 @@
   <p>LC Construção e Reforma · ME · Ourinhos e região</p>
 </footer>
 
+  <style>
+  [hidden] { display: none !important; }
+  .edu-fab {
+    position: fixed; right: 18px; bottom: 18px; z-index: 9999;
+    display: flex; align-items: center; gap: 8px;
+    background: #f5b800; color: #1a1a1a; border: 0; border-radius: 999px;
+    padding: 14px 20px; font: 700 15px/1 "Work Sans", Arial, sans-serif;
+    cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,.3);
+  }
+  .edu-fab:hover { filter: brightness(1.05); }
+  .edu-chat {
+    position: fixed; right: 18px; bottom: 18px; z-index: 10000;
+    width: 360px; max-width: calc(100vw - 24px);
+    height: 520px; max-height: calc(100vh - 36px);
+    display: flex; flex-direction: column; overflow: hidden;
+    background: #fff; color: #1a1a1a; border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    font: 15px/1.4 "Work Sans", Arial, sans-serif;
+  }
+  .edu-head {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #1a1a1a; color: #fff; padding: 12px 14px;
+  }
+  .edu-head strong { display: block; font-size: 15px; }
+  .edu-head small { color: #f5b800; font-size: 12px; }
+  .edu-x {
+    background: transparent; border: 0; color: #fff; font-size: 26px;
+    line-height: 1; cursor: pointer; padding: 0 4px;
+  }
+  .edu-log {
+    flex: 1; overflow-y: auto; padding: 12px;
+    display: flex; flex-direction: column; gap: 8px; background: #f3f1ec;
+  }
+  .edu-m {
+    max-width: 85%; padding: 9px 12px; border-radius: 12px;
+    background: #fff; white-space: pre-wrap; word-wrap: break-word;
+    align-self: flex-start; box-shadow: 0 1px 2px rgba(0,0,0,.08);
+  }
+  .edu-m.edu-me { align-self: flex-end; background: #f5b800; }
+  .edu-m a { color: #0b5cad; font-weight: 600; }
+  .edu-typing { display: flex; gap: 4px; padding: 12px; }
+  .edu-typing i {
+    width: 7px; height: 7px; border-radius: 50%; background: #999;
+    animation: edu-pulso 1s infinite ease-in-out;
+  }
+  .edu-typing i:nth-child(2) { animation-delay: .15s; }
+  .edu-typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes edu-pulso { 0%,80%,100% { opacity: .3; } 40% { opacity: 1; } }
+  .edu-quick { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px 0; background: #fff; }
+  .edu-quick:empty { display: none; }
+  .edu-quick button {
+    background: #fff; border: 1.5px solid #1a1a1a; border-radius: 999px;
+    padding: 6px 12px; font: 600 13px "Work Sans", Arial, sans-serif; cursor: pointer;
+  }
+  .edu-quick button:hover { background: #f5b800; border-color: #f5b800; }
+  .edu-form { display: flex; gap: 8px; padding: 10px 12px; background: #fff; }
+  .edu-form input {
+    flex: 1; min-width: 0; border: 1.5px solid #ccc; border-radius: 8px;
+    padding: 10px; font: 16px "Work Sans", Arial, sans-serif;
+  }
+  .edu-form input:focus { outline: 2px solid #f5b800; border-color: #f5b800; }
+  .edu-form button {
+    background: #1a1a1a; color: #fff; border: 0; border-radius: 8px;
+    padding: 0 16px; font: 600 14px "Work Sans", Arial, sans-serif; cursor: pointer;
+  }
+  @media (max-width: 480px) {
+    .edu-chat { right: 8px; bottom: 8px; width: calc(100vw - 16px); height: calc(100vh - 16px); max-height: none; }
+  }
+</style>
+ 
+<script>
+(function () {
+  "use strict";
+ 
+  // ---- Dados da empresa (edite aqui) ----
+  var CONFIG = {
+    empresa: "LC Construção e Reforma",
+    regiao: "Ourinhos e região",
+    telefone: "(14) 99845-4184",
+    whatsapp: "(14) 99845-4184",
+    whatsappLink: "https://wa.me/5514998454184",
+    email: "lc.construcaoereforma@gmail.com",
+    horario: "fale com a equipe pelo WhatsApp e respondemos o mais rápido possível.",
+    servicos: [
+      "Construção completa de casas",
+      "Reformas em qualquer parte da casa",
+      "Reforma de banheiros",
+      "Muros",
+      "Calçadas",
+      "Telhados",
+      "Instalação de portas e janelas",
+      "Instalação de tetos",
+      "Encanamento",
+      "Outros serviços de obra. Pergunte!"
+    ],
+    equipe: "A obra é conduzida pelo pedreiro Lucas de Oliveira, junto com a equipe. O time cresce ou diminui conforme o tamanho de cada obra.",
+    historia: "O Lucas trabalha como pedreiro desde a adolescência e formalizou a empresa em 2021.",
+    prazo: "O prazo depende do tipo e do tamanho da obra. Ele é combinado na visita e informado junto com o orçamento.",
+    pagamento: "As condições de pagamento são combinadas com a equipe junto com o orçamento."
+  };
+ 
+  var MENU = ["Serviços", "Pedir orçamento", "Prazos", "Pagamento", "Horário", "Contato"];
+ 
+  // Cria elemento: h("div", "classe", "texto")
+  function h(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) el.className = cls;
+    if (text) el.textContent = text;
+    return el;
+  }
+ 
+  function montar() {
+    if (document.querySelector(".edu-chat")) return;
+ 
+    var fab = h("button", "edu-fab", "💬 Fale com o Edu");
+    fab.type = "button";
+    fab.setAttribute("aria-label", "Abrir conversa com o Edu");
+ 
+    var chat = h("section", "edu-chat");
+    chat.hidden = true;
+    chat.setAttribute("aria-label", "Conversa com o Edu");
+ 
+    var head = h("div", "edu-head");
+    var tit = h("div");
+    tit.append(h("strong", "", "Edu"), h("small", "", "Assistente virtual · " + CONFIG.empresa));
+    var close = h("button", "edu-x", "×");
+    close.type = "button";
+    close.setAttribute("aria-label", "Fechar conversa");
+    head.append(tit, close);
+ 
+    var log = h("div", "edu-log");
+    log.setAttribute("aria-live", "polite");
+    var quick = h("div", "edu-quick");
+ 
+    var form = h("form", "edu-form");
+    var input = h("input");
+    input.type = "text";
+    input.placeholder = "Digite sua mensagem...";
+    input.autocomplete = "off";
+    input.setAttribute("aria-label", "Sua mensagem");
+    var send = h("button", "", "Enviar");
+    send.type = "submit";
+    form.append(input, send);
+ 
+    chat.append(head, log, quick, form);
+    document.body.append(fab, chat);
+ 
+    iniciar({ fab: fab, chat: chat, close: close, log: log, quick: quick, form: form, input: input });
+  }
+ 
+  function iniciar(ui) {
+    var flow = null, lead = {}, started = false;
+ 
+    var norm = function (s) { return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim(); };
+    var has = function (s, words) { return words.some(function (w) { return s.indexOf(w) !== -1; }); };
+    var saudacao = function () { var hr = new Date().getHours(); return hr < 12 ? "Bom dia" : hr < 18 ? "Boa tarde" : "Boa noite"; };
+ 
+    function rolar() { ui.log.scrollTop = ui.log.scrollHeight; }
+ 
+    function add(text, me) {
+      ui.log.appendChild(h("div", "edu-m" + (me ? " edu-me" : ""), text));
+      rolar();
+    }
+ 
+    function addLink(label, url) {
+      var d = h("div", "edu-m");
+      var a = h("a", "", label);
+      a.href = url; a.target = "_blank"; a.rel = "noopener";
+      d.appendChild(a);
+      ui.log.appendChild(d);
+      rolar();
+    }
+ 
+    function setQuick(opts) {
+      ui.quick.textContent = "";
+      opts.forEach(function (o) {
+        var b = h("button", "", o);
+        b.type = "button";
+        b.onclick = function () { enviar(o); };
+        ui.quick.appendChild(b);
+      });
+    }
+ 
+    function botSay(text, opts, depois) {
+      setQuick([]);
+      var t = h("div", "edu-m edu-typing");
+      t.append(h("i"), h("i"), h("i"));
+      ui.log.appendChild(t); rolar();
+      setTimeout(function () {
+        t.remove();
+        add(text);
+        if (depois) depois();
+        setQuick(opts || MENU);
+      }, 550);
+    }
+ 
+    function startQuote() {
+      flow = "nome"; lead = {};
+      botSay("Vamos montar seu pedido de orçamento. Qual é o seu nome?", []);
+    }
+ 
+    function handleFlow(raw) {
+      if (has(norm(raw), ["cancelar", "sair", "voltar"])) {
+        flow = null;
+        return botSay("Pedido cancelado. Posso ajudar em mais alguma coisa?");
+      }
+      if (flow === "nome") {
+        lead.nome = raw; flow = "tipo";
+        return botSay("Prazer, " + raw + "! Que tipo de obra você quer fazer?", ["Casa nova", "Reforma", "Muro ou calçada", "Telhado"]);
+      }
+      if (flow === "tipo") {
+        lead.tipo = raw; flow = "cidade";
+        return botSay("Em qual cidade fica o terreno ou o imóvel?", []);
+      }
+      if (flow === "cidade") {
+        lead.cidade = raw; flow = "contato";
+        return botSay("Qual telefone ou WhatsApp podemos usar para falar com você?", []);
+      }
+      if (flow === "contato") {
+        lead.contato = raw; flow = null;
+        var resumo = "Pedido de orçamento\nNome: " + lead.nome + "\nObra: " + lead.tipo + "\nCidade: " + lead.cidade + "\nContato: " + lead.contato;
+        var link = CONFIG.whatsappLink + "?text=" + encodeURIComponent("Olá! Vim pelo site.\n" + resumo);
+        return botSay(
+          "Pedido anotado:\n• Nome: " + lead.nome + "\n• Obra: " + lead.tipo + "\n• Cidade: " + lead.cidade + "\n• Contato: " + lead.contato +
+          "\n\nToque no botão abaixo para enviar esses dados à equipe pelo WhatsApp. A equipe combina a visita e envia o orçamento.",
+          MENU,
+          function () { addLink("Enviar pelo WhatsApp", link); }
+        );
+      }
+    }
+ 
+    function reply(raw) {
+      var s = norm(raw);
+      if (has(s, ["orcamento", "cotacao", "preco", "quanto custa", "valor"])) return startQuote();
+      if (has(s, ["servico", "fazem", "fazer", "trabalham", "o que voces"]))
+        return botSay("A " + CONFIG.empresa + " atua com:\n• " + CONFIG.servicos.join("\n• ") + "\n\nQuer pedir um orçamento?", ["Pedir orçamento", "Prazos", "Contato"]);
+      if (has(s, ["equipe", "lucas", "pedreiro", "quem sao", "quem e"])) return botSay(CONFIG.equipe, ["Serviços", "Pedir orçamento"]);
+      if (has(s, ["anos", "desde", "existe", "historia", "experiencia"])) return botSay(CONFIG.historia, ["Serviços", "Pedir orçamento"]);
+      if (has(s, ["prazo", "demora", "quanto tempo", "tempo de obra"])) return botSay(CONFIG.prazo, ["Pedir orçamento", "Pagamento"]);
+      if (has(s, ["pagamento", "pagar", "parcela", "financ", "entrada", "cartao", "pix"])) return botSay(CONFIG.pagamento, ["Pedir orçamento", "Prazos"]);
+      if (has(s, ["horario", "aberto", "funciona", "atendimento", "expediente"])) return botSay("Atendimento: " + CONFIG.horario);
+      if (has(s, ["onde", "regiao", "cidade", "ourinhos", "atende", "visita"])) return botSay("Atendemos " + CONFIG.regiao + ". Para visita técnica na sua obra, peça um orçamento.", ["Pedir orçamento", "Horário"]);
+      if (has(s, ["contato", "telefone", "whatsapp", "zap", "email", "e-mail", "falar com", "atendente", "humano", "pessoa"]))
+        return botSay("Fale com a nossa equipe:\n• Telefone: " + CONFIG.telefone + "\n• WhatsApp: " + CONFIG.whatsapp + "\n• E-mail: " + CONFIG.email, null, function () { addLink("Abrir WhatsApp", CONFIG.whatsappLink); });
+      if (has(s, ["obrigad", "valeu", "agradec"])) return botSay("De nada! Se precisar de mais alguma coisa, é só chamar.");
+      if (has(s, ["tchau", "ate mais", "ate logo"])) return botSay("Até mais! A " + CONFIG.empresa + " agradece o contato. WhatsApp: " + CONFIG.whatsapp + " | E-mail: " + CONFIG.email, []);
+      if (/\b(oi|ola|e ai)\b/.test(s) || has(s, ["bom dia", "boa tarde", "boa noite"])) return botSay("Olá! Sou o Edu. Como posso ajudar?");
+      botSay("Não entendi bem essa pergunta. Posso ajudar com serviços, orçamento, prazos, pagamento, horário e contato. Se preferir, fale direto com a equipe pelo WhatsApp " + CONFIG.whatsapp + ".");
+    }
+ 
+    function enviar(text) {
+      var v = text.trim(); if (!v) return;
+      add(v, true); ui.input.value = "";
+      if (flow) handleFlow(v); else reply(v);
+    }
+ 
+    function abrir() {
+      ui.chat.hidden = false; ui.fab.hidden = true;
+      if (!started) {
+        started = true;
+        botSay(saudacao() + "! Sou o Edu, assistente virtual da " + CONFIG.empresa + ".\nComo posso te ajudar hoje?");
+      }
+      ui.input.focus();
+    }
+    function fechar() { ui.chat.hidden = true; ui.fab.hidden = false; ui.fab.focus(); }
+ 
+    ui.fab.addEventListener("click", abrir);
+    ui.close.addEventListener("click", fechar);
+    ui.form.addEventListener("submit", function (e) { e.preventDefault(); enviar(ui.input.value); });
+    // Botões do site com data-abrir-chat também abrem o Edu
+    document.querySelectorAll("[data-abrir-chat]").forEach(function (b) { b.addEventListener("click", abrir); });
+  }
+ 
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", montar);
+  else montar();
+})();
+</script>
+</body>
+</html>
   
