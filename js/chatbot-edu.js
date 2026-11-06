@@ -1,0 +1,203 @@
+/*
+ * Edu – assistente virtual da LC Construção e Reforma
+ * Arquivo único: injeta o CSS e o HTML sozinho.
+ * Uso: <script src="js/chatbot-edu.js" defer></script> antes de </body>
+ */
+(function () {
+  // ===== EDITE AQUI: dados da empresa =====
+  const CONFIG = {
+    empresa: "LC Construção e Reforma",
+    telefone: "(14) 99845-4184",
+    whatsapp: "(14) 99845-4184",
+    whatsappLink: "https://wa.me/5514998454184",
+    email: "lc.construcaoereforma@gmail.com",
+    regiao: "Ourinhos e região",
+    horario: "Segunda a sexta, das 8h às 18h. Sábado, das 8h às 16h.", // exemplo: confirme
+    servicos: [
+      "Construção completa de casas",
+      "Reformas em qualquer parte da casa",
+      "Reforma de banheiros",
+      "Muros e calçadas",
+      "Telhados",
+      "Instalação de portas, janelas e tetos",
+      "Encanamento",
+      "E outros serviços de obra"
+    ],
+    equipe: "A equipe é liderada pelo pedreiro Lucas de Oliveira. O número de profissionais varia conforme o tamanho da obra.",
+    historia: "Lucas trabalha no ramo desde a adolescência, e a empresa foi formalizada como MEI em 2021.",
+    prazo: "O prazo depende do tamanho e do tipo da obra. Uma reforma pequena costuma levar semanas; uma casa nova, vários meses. Depois da visita técnica, você recebe um cronograma.", // exemplo: confirme
+    pagamento: "O pagamento pode ser dividido em etapas, de acordo com o andamento da obra. As condições são combinadas no orçamento." // exemplo: confirme
+  };
+  // ========================================
+
+  const CSS = `
+#edu-root{--bg:#e4e1da;--card:#f6f4ef;--ink:#26282a;--mute:#6b6e70;--line:#d3cfc6;--bot:#fff;--me:#26282a;--meink:#f6f4ef;--hi:#f2b705;--hiink:#26282a;font:16px/1.4 Barlow,system-ui,Arial,sans-serif}
+@media (prefers-color-scheme:dark){#edu-root{--bg:#17181a;--card:#222426;--ink:#ecebe7;--mute:#9a9d9f;--line:#34373a;--bot:#2e3134;--me:#f2b705;--meink:#26282a}}
+#edu-root *,#edu-root *::before,#edu-root *::after{box-sizing:border-box}
+#edu-root [hidden]{display:none!important}
+.edu-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:2147483000;display:flex;align-items:center;gap:8px;background:var(--hi);color:var(--hiink);border:0;border-radius:999px;padding:13px 20px;font:600 16px Barlow,system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.edu-chat{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:2147483001;width:min(400px,calc(100vw - 32px));height:min(600px,calc(100dvh - 32px));background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 36px rgba(0,0,0,.35)}
+.edu-head{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#26282a;color:#f6f4ef;border-bottom:6px solid var(--hi)}
+.edu-avatar{width:42px;height:42px;border-radius:50%;background:var(--hi);display:grid;place-items:center;font-size:22px;flex:none}
+.edu-head h2{font:700 22px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.02em;margin:0}
+.edu-head p{margin:3px 0 0;font-size:13px;color:#b9bbbc}
+.edu-on{display:inline-block;width:8px;height:8px;border-radius:50%;background:#5cc47a;margin-right:6px}
+.edu-head>div:nth-child(2){flex:1;min-width:0}
+.edu-close{background:none;border:1px solid #b9bbbc;color:#f6f4ef;border-radius:4px;padding:4px 10px;font:inherit;font-size:14px;cursor:pointer}
+.edu-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.edu-m{max-width:86%;padding:10px 13px;border-radius:4px 14px 14px 14px;background:var(--bot);border:1px solid var(--line);white-space:pre-wrap;line-height:1.45;overflow-wrap:anywhere}
+.edu-m.edu-me{align-self:flex-end;background:var(--me);color:var(--meink);border-color:transparent;border-radius:14px 4px 14px 14px}
+.edu-m a{color:inherit;font-weight:600}
+.edu-typing{display:flex;gap:4px;padding:14px}
+.edu-typing i{width:7px;height:7px;border-radius:50%;background:var(--mute);animation:edu-b 1s infinite}
+.edu-typing i:nth-child(2){animation-delay:.15s}.edu-typing i:nth-child(3){animation-delay:.3s}
+@keyframes edu-b{0%,60%,100%{opacity:.3}30%{opacity:1}}
+.edu-quick{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 10px}
+.edu-quick button{font:500 14px Barlow,system-ui,sans-serif;color:var(--ink);background:transparent;border:1.5px solid var(--ink);border-radius:999px;padding:6px 13px;cursor:pointer}
+.edu-quick button:hover{background:var(--hi);border-color:var(--hi);color:var(--hiink)}
+.edu-form{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line)}
+.edu-form input{flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bot);border:1.5px solid var(--line);border-radius:6px;padding:10px 12px}
+.edu-form button{font:600 15px Barlow,system-ui,sans-serif;background:var(--hi);color:var(--hiink);border:0;border-radius:6px;padding:0 18px;cursor:pointer}
+#edu-root input:focus,#edu-root button:focus-visible{outline:3px solid var(--hi);outline-offset:1px}
+@media (prefers-reduced-motion:reduce){.edu-typing i{animation:none;opacity:.6}}
+@media (max-width:480px){.edu-chat{right:0;bottom:0;width:100vw;height:100dvh;border-radius:0;border:0}}
+`;
+
+  // ---------- Montagem do widget ----------
+  function h(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text) e.textContent = text;
+    return e;
+  }
+
+  function montar() {
+    if (document.getElementById("edu-root")) return;
+
+    const fonts = h("link");
+    fonts.rel = "stylesheet";
+    fonts.href = "https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap";
+    document.head.appendChild(fonts);
+    const style = h("style"); style.textContent = CSS; document.head.appendChild(style);
+
+    const root = h("div"); root.id = "edu-root";
+
+    const fab = h("button", "edu-fab", "👷 Fale com o Edu");
+    fab.type = "button"; fab.setAttribute("aria-label", "Abrir atendimento com o Edu");
+
+    const chat = h("section", "edu-chat"); chat.hidden = true; chat.setAttribute("aria-label", "Atendimento Edu");
+    const head = h("header", "edu-head");
+    const avatar = h("div", "edu-avatar", "👷"); avatar.setAttribute("aria-hidden", "true");
+    const info = h("div");
+    info.appendChild(h("h2", "", "Edu"));
+    const sub = h("p"); sub.appendChild(h("span", "edu-on")); sub.append("Assistente virtual da " + CONFIG.empresa);
+    info.appendChild(sub);
+    const close = h("button", "edu-close", "Fechar"); close.type = "button";
+    head.append(avatar, info, close);
+
+    const log = h("div", "edu-log"); log.setAttribute("role", "log"); log.setAttribute("aria-live", "polite");
+    const quick = h("div", "edu-quick");
+    const form = h("form", "edu-form"); form.autocomplete = "off";
+    const input = h("input"); input.type = "text"; input.placeholder = "Digite sua mensagem"; input.setAttribute("aria-label", "Mensagem");
+    const send = h("button", "", "Enviar"); send.type = "submit";
+    form.append(input, send);
+
+    chat.append(head, log, quick, form);
+    root.append(fab, chat);
+    document.body.appendChild(root);
+
+    iniciar({ fab, chat, close, log, quick, form, input });
+  }
+
+  // ---------- Lógica do chatbot ----------
+  function iniciar(ui) {
+    const MENU = ["Serviços", "Pedir orçamento", "Prazos", "Pagamento", "Horário", "Contato"];
+    let flow = null, lead = {}, started = false;
+
+    const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    const has = (s, words) => words.some(w => s.includes(w));
+    const saudacao = () => { const h = new Date().getHours(); return h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"; };
+
+    function add(text, me) {
+      const d = h("div", "edu-m" + (me ? " edu-me" : ""), text);
+      ui.log.appendChild(d);
+      ui.log.scrollTop = ui.log.scrollHeight;
+    }
+    function setQuick(opts) {
+      ui.quick.textContent = "";
+      opts.forEach(o => {
+        const b = h("button", "", o); b.type = "button";
+        b.onclick = () => enviar(o);
+        ui.quick.appendChild(b);
+      });
+    }
+    function botSay(text, opts) {
+      setQuick([]);
+      const t = h("div", "edu-m edu-typing");
+      t.append(h("i"), h("i"), h("i"));
+      ui.log.appendChild(t); ui.log.scrollTop = ui.log.scrollHeight;
+      setTimeout(() => { t.remove(); add(text); setQuick(opts || MENU); }, 550);
+    }
+
+    function startQuote() {
+      flow = "nome"; lead = {};
+      botSay("Vamos montar seu pedido de orçamento. Qual é o seu nome?", []);
+    }
+
+    function handleFlow(raw) {
+      if (has(norm(raw), ["cancelar", "sair", "voltar"])) { flow = null; return botSay("Pedido cancelado. Posso ajudar em mais alguma coisa?"); }
+      if (flow === "nome") { lead.nome = raw; flow = "tipo"; return botSay("Prazer, " + raw + "! Que tipo de obra você quer fazer?", ["Casa nova", "Reforma", "Muro ou calçada", "Telhado"]); }
+      if (flow === "tipo") { lead.tipo = raw; flow = "cidade"; return botSay("Em qual cidade fica o terreno ou o imóvel?", []); }
+      if (flow === "cidade") { lead.cidade = raw; flow = "contato"; return botSay("Qual telefone ou WhatsApp podemos usar para falar com você?", []); }
+      if (flow === "contato") {
+        lead.contato = raw; flow = null;
+        return botSay("Pedido anotado:\n• Nome: " + lead.nome + "\n• Obra: " + lead.tipo + "\n• Cidade: " + lead.cidade + "\n• Contato: " + lead.contato +
+          "\n\nPara enviar à equipe, mande esses dados pelo WhatsApp " + CONFIG.whatsapp + " ou pelo e-mail " + CONFIG.email + ". A equipe combina a visita e envia o orçamento.");
+      }
+    }
+
+    function reply(raw) {
+      const s = norm(raw);
+      if (has(s, ["orcamento", "cotacao", "preco", "quanto custa", "valor"])) return startQuote();
+      if (has(s, ["servico", "fazem", "fazer", "trabalham", "o que voces"]))
+        return botSay("A " + CONFIG.empresa + " atua com:\n• " + CONFIG.servicos.join("\n• ") + "\n\nQuer pedir um orçamento?", ["Pedir orçamento", "Prazos", "Contato"]);
+      if (has(s, ["equipe", "lucas", "pedreiro", "quem sao", "quem e"])) return botSay(CONFIG.equipe, ["Serviços", "Pedir orçamento"]);
+      if (has(s, ["anos", "desde", "existe", "historia", "experiencia"])) return botSay(CONFIG.historia, ["Serviços", "Pedir orçamento"]);
+      if (has(s, ["prazo", "demora", "quanto tempo", "tempo de obra"])) return botSay(CONFIG.prazo, ["Pedir orçamento", "Pagamento"]);
+      if (has(s, ["pagamento", "pagar", "parcela", "financ", "entrada", "cartao", "pix"])) return botSay(CONFIG.pagamento, ["Pedir orçamento", "Prazos"]);
+      if (has(s, ["horario", "aberto", "funciona", "atendimento", "expediente"])) return botSay("Atendemos: " + CONFIG.horario);
+      if (has(s, ["onde", "regiao", "cidade", "ourinhos", "atende", "visita"])) return botSay("Atendemos " + CONFIG.regiao + ". Para visita técnica na sua obra, peça um orçamento.", ["Pedir orçamento", "Horário"]);
+      if (has(s, ["contato", "telefone", "whatsapp", "zap", "email", "e-mail", "falar com", "atendente", "humano", "pessoa"]))
+        return botSay("Fale com a nossa equipe:\n• Telefone: " + CONFIG.telefone + "\n• WhatsApp: " + CONFIG.whatsapp + "\n• E-mail: " + CONFIG.email + "\n• Horário: " + CONFIG.horario);
+      if (has(s, ["obrigad", "valeu", "agradec"])) return botSay("De nada! Se precisar de mais alguma coisa, é só chamar.");
+      if (has(s, ["tchau", "ate mais", "ate logo"])) return botSay("Até mais! A " + CONFIG.empresa + " agradece o contato. WhatsApp: " + CONFIG.whatsapp + " | E-mail: " + CONFIG.email, []);
+      if (has(s, ["oi", "ola", "bom dia", "boa tarde", "boa noite", "e ai"]) && s.length < 25) return botSay("Olá! Sou o Edu. Como posso ajudar?");
+      botSay("Não entendi bem essa pergunta. Posso ajudar com serviços, orçamento, prazos, pagamento, horário e contato. Se preferir, fale direto com a equipe pelo WhatsApp " + CONFIG.whatsapp + ".");
+    }
+
+    function enviar(text) {
+      const v = text.trim(); if (!v) return;
+      add(v, true); ui.input.value = "";
+      flow ? handleFlow(v) : reply(v);
+    }
+
+    function abrir() {
+      ui.chat.hidden = false; ui.fab.hidden = true;
+      if (!started) {
+        started = true;
+        botSay(saudacao() + "! Sou o Edu, assistente virtual da " + CONFIG.empresa + ".\nComo posso te ajudar hoje?");
+      }
+      ui.input.focus();
+    }
+    function fechar() { ui.chat.hidden = true; ui.fab.hidden = false; ui.fab.focus(); }
+
+    ui.fab.addEventListener("click", abrir);
+    ui.close.addEventListener("click", fechar);
+    ui.form.addEventListener("submit", e => { e.preventDefault(); enviar(ui.input.value); });
+    // Botões do site com data-abrir-chat também abrem o Edu
+    document.querySelectorAll("[data-abrir-chat]").forEach(b => b.addEventListener("click", abrir));
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", montar);
+  else montar();
+})();
